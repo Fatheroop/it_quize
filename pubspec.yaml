@@ -1,0 +1,42 @@
+name: it_quize
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  build_runner: ^2.4.13
+  flutter:
+    sdk: flutter
+  hive:
+  isar_flutter_libs: ^4.0.0-dev.13
+  path_provider: ^2.1.5
+  window_manager: ^0.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  hive_generator: 
+
+flutter:  
+  uses-material-design: true
+  assets:
+    - assets/images/
+
+  fonts:
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/Lato-Black.ttf
+          weight: 700
+        - asset: assets/fonts/Lato-Light.ttf
+          weight: 100
+        - asset: assets/fonts/Lato-Regular.ttf
+    - family: Pacifico
+      fonts:
+      - asset: assets/fonts/Pacifico-Regular.ttf
+
+
+      
