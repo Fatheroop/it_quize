@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_glass_morphism/flutter_glass_morphism.dart';
 import 'package:it_quize/login_page.dart';
 import 'package:it_quize/studentboxhive.dart';
-import 'package:it_quize/studentmanage.dart';
 import 'package:it_quize/testdata.dart';
 import 'package:it_quize/testhome.dart';
+import 'package:it_quize/testresultshow.dart';
 import 'package:it_quize/theme.dart';
 import 'dart:async';
 
@@ -70,7 +70,7 @@ class _StudenthomeState extends State<Studenthome> {
     super.dispose();
   }
 
-  Widget _currenttestoptions(Iterable<StudentTestData?> data) {
+  Widget _currenttestoptions(Iterable<StudentTestData?> data, String testid) {
     if (data.isNotEmpty) {
       final datas = data.first;
       debugPrint(datas!.obtainedmarks.toString());
@@ -87,6 +87,19 @@ class _StudenthomeState extends State<Studenthome> {
             style: MyTheme().textfieldtextstyle.copyWith(
               color: const Color.fromARGB(215, 245, 0, 139),
             ),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      Resultpreview(testid: testid, studentdata: datas),
+                ),
+              );
+            },
+            icon: Icon(Icons.preview),
+            color: const Color.fromARGB(255, 66, 0, 141),
           ),
         ],
       );
@@ -169,99 +182,105 @@ class _StudenthomeState extends State<Studenthome> {
                     oldpasswordfoucsnode.requestFocus();
                     showDialog(
                       context: context,
-                      builder: (BuildContext contex) => AlertDialog(
-                        backgroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.white54),
-                          borderRadius: BorderRadiusGeometry.all(
-                            Radius.circular(12),
-                          ),
-                        ),
-                        title: Text(
-                          "Change Password",
-                          style: MyTheme().textfieldtextstyle.copyWith(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
-                        ),
-                        content: Text(
-                          alertboxchangepasswordtext,
-                          style: MyTheme().textfieldtextstyle,
-                        ),
-                        actions: [
-                          SizedBox(
-                            width: 300,
-                            child: Column(
-                              spacing: 8,
-                              children: [
-                                TextField(
-                                  style: MyTheme().textfieldtextstyle,
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    enabledBorder: MyTheme().border,
-                                    focusedBorder: MyTheme().border,
-                                    label: Text(
-                                      "Old Password",
+                      builder: (BuildContext contex) => StatefulBuilder(
+                        builder: (context, setState) {
+                          return AlertDialog(
+                            backgroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(color: Colors.white54),
+                              borderRadius: BorderRadiusGeometry.all(
+                                Radius.circular(12),
+                              ),
+                            ),
+                            title: Text(
+                              "Change Password",
+                              style: MyTheme().textfieldtextstyle.copyWith(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                            content: Text(
+                              alertboxchangepasswordtext,
+                              style: MyTheme().textfieldtextstyle,
+                            ),
+                            actions: [
+                              SizedBox(
+                                width: 300,
+                                child: Column(
+                                  spacing: 8,
+                                  children: [
+                                    TextField(
+                                      focusNode: oldpasswordfoucsnode,
                                       style: MyTheme().textfieldtextstyle,
-                                    ),
-                                  ),
-                                  onSubmitted: (value) {
-                                    setState(() {
-                                      if (oldpassword.text ==
-                                          Studentboxhive().passwordsbox.get(
-                                            widget.id,
-                                          )[1]) {
-                                        shownewpassword = true;
-
-                                        oldpasswordfoucsnode.nextFocus();
-                                      } else {
-                                        alertboxchangepasswordtext =
-                                            "Wrong Password";
-                                      }
-                                    });
-                                  },
-                                  controller: oldpassword,
-                                ),
-                                shownewpassword
-                                    ? TextField(
-                                        style: MyTheme().textfieldtextstyle,
-                                        obscureText: true,
-                                        decoration: InputDecoration(
-                                          enabledBorder: MyTheme().border,
-                                          focusedBorder: MyTheme().border,
-                                          label: Text(
-                                            "New Password",
-                                            style: MyTheme().textfieldtextstyle,
-                                          ),
-                                        ),
-                                        controller: newpassword,
-                                      )
-                                    : SizedBox(),
-                                shownewpassword
-                                    ? OutlinedButton(
-                                        onPressed: () {
-                                          final oldpasswordinbox =
-                                              Studentboxhive().passwordsbox.get(
-                                                widget.id,
-                                              );
-                                          oldpasswordinbox[1] =
-                                              newpassword.text;
-                                          Studentboxhive().passwordsbox.put(
-                                            widget.id,
-                                            oldpasswordinbox,
-                                          );
-                                        },
-                                        child: Text(
-                                          "Submit",
+                                      obscureText: true,
+                                      decoration: InputDecoration(
+                                        enabledBorder: MyTheme().border,
+                                        focusedBorder: MyTheme().border,
+                                        label: Text(
+                                          "Old Password",
                                           style: MyTheme().textfieldtextstyle,
                                         ),
-                                      )
-                                    : SizedBox(),
-                              ],
-                            ),
-                          ),
-                        ],
+                                      ),
+                                      onSubmitted: (value) {
+                                        setState(() {
+                                          if (value ==
+                                              Studentboxhive().passwordsbox.get(
+                                                widget.id,
+                                              )[1]) {
+                                            shownewpassword = true;
+                                            oldpasswordfoucsnode.nextFocus();
+                                          } else {
+                                            alertboxchangepasswordtext =
+                                                "Wrong Password";
+                                          }
+                                        });
+                                      },
+                                      controller: oldpassword,
+                                    ),
+                                    shownewpassword
+                                        ? TextField(
+                                            style: MyTheme().textfieldtextstyle,
+                                            obscureText: true,
+                                            decoration: InputDecoration(
+                                              enabledBorder: MyTheme().border,
+                                              focusedBorder: MyTheme().border,
+                                              label: Text(
+                                                "New Password",
+                                                style: MyTheme()
+                                                    .textfieldtextstyle,
+                                              ),
+                                            ),
+                                            controller: newpassword,
+                                          )
+                                        : SizedBox(),
+                                    shownewpassword
+                                        ? OutlinedButton(
+                                            onPressed: () {
+                                              final oldpasswordinbox =
+                                                  Studentboxhive().passwordsbox
+                                                      .get(widget.id);
+                                              oldpasswordinbox[1] =
+                                                  newpassword.text;
+                                              Studentboxhive().passwordsbox.put(
+                                                widget.id,
+                                                oldpasswordinbox,
+                                              );
+                                              Navigator.pop(contex);
+                                            },
+                                            child: Text(
+                                              "Submit",
+                                              style:
+                                                  MyTheme().textfieldtextstyle,
+                                            ),
+                                          )
+                                        : SizedBox(),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     );
                   },
@@ -317,7 +336,10 @@ class _StudenthomeState extends State<Studenthome> {
                             data!.testname,
                             style: MyTheme().textfieldtextstyle,
                           ),
-                          _currenttestoptions(teststudentdata),
+                          _currenttestoptions(
+                            teststudentdata,
+                            filterredkeys[index],
+                          ),
                         ],
                       ),
                     ),

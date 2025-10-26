@@ -264,17 +264,20 @@ class _NewTestScreenState extends State<NewTestScreen> {
         }
       }
       for (QuestionsData entity in questions) {
+        final questionindex = questions.indexOf(entity) + 1;
         if (entity.answers.contains("")) {
           errortextstate = true;
-          errortext = "Options are missing";
+          errortext = "Options are missing at: $questionindex";
           selectedquestionindex = questions.indexOf(entity);
           errorfound = true;
-          break;
         } else if (entity.question == "") {
-          errortext = "Question is missing";
+          errortext = "Question is missing at: $questionindex";
           errortextstate = true;
           errorfound = true;
-          break;
+        } else if (entity.correctanswerindex.isEmpty) {
+          errorfound = true;
+          errortext = "Correct Option Missing at: $questionindex";
+          errortextstate = true;
         }
       }
       if (errorfound == false) {
