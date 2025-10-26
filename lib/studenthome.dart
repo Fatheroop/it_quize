@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_glass_morphism/flutter_glass_morphism.dart';
 import 'package:it_quize/login_page.dart';
 import 'package:it_quize/studentboxhive.dart';
+import 'package:it_quize/studentmanage.dart';
 import 'package:it_quize/testdata.dart';
 import 'package:it_quize/testhome.dart';
 import 'package:it_quize/theme.dart';
@@ -21,6 +22,14 @@ class _StudenthomeState extends State<Studenthome> {
   final studentbox = Studentboxhive();
   final testbox = Testdatamanage();
   final List<String> filterredkeys = [];
+
+  final oldpassword = TextEditingController();
+  final newpassword = TextEditingController();
+  FocusNode oldpasswordfoucsnode = FocusNode();
+  String alertboxchangepasswordtext =
+      "Please contact to teacher if forgot password";
+
+  bool shownewpassword = false;
 
   final imageassests = [
     "assets/images/aot.jpg",
@@ -45,7 +54,7 @@ class _StudenthomeState extends State<Studenthome> {
   }
 
   void _starttimer() {
-    time = Timer.periodic(Duration(seconds: 20), (timer) {
+    time = Timer.periodic(Duration(seconds: 5), (timer) {
       setState(() {
         if (_currentimageindex >= imageassests.length - 1) {
           _currentimageindex = 0;
@@ -153,6 +162,112 @@ class _StudenthomeState extends State<Studenthome> {
                   child: Text(
                     "Log Out",
                     style: TextStyle(color: Colors.red, fontSize: 15),
+                  ),
+                ),
+                OutlinedButton(
+                  onPressed: () {
+                    oldpasswordfoucsnode.requestFocus();
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext contex) => AlertDialog(
+                        backgroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.white54),
+                          borderRadius: BorderRadiusGeometry.all(
+                            Radius.circular(12),
+                          ),
+                        ),
+                        title: Text(
+                          "Change Password",
+                          style: MyTheme().textfieldtextstyle.copyWith(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                        content: Text(
+                          alertboxchangepasswordtext,
+                          style: MyTheme().textfieldtextstyle,
+                        ),
+                        actions: [
+                          SizedBox(
+                            width: 300,
+                            child: Column(
+                              spacing: 8,
+                              children: [
+                                TextField(
+                                  style: MyTheme().textfieldtextstyle,
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                    enabledBorder: MyTheme().border,
+                                    focusedBorder: MyTheme().border,
+                                    label: Text(
+                                      "Old Password",
+                                      style: MyTheme().textfieldtextstyle,
+                                    ),
+                                  ),
+                                  onSubmitted: (value) {
+                                    setState(() {
+                                      if (oldpassword.text ==
+                                          Studentboxhive().passwordsbox.get(
+                                            widget.id,
+                                          )[1]) {
+                                        shownewpassword = true;
+
+                                        oldpasswordfoucsnode.nextFocus();
+                                      } else {
+                                        alertboxchangepasswordtext =
+                                            "Wrong Password";
+                                      }
+                                    });
+                                  },
+                                  controller: oldpassword,
+                                ),
+                                shownewpassword
+                                    ? TextField(
+                                        style: MyTheme().textfieldtextstyle,
+                                        obscureText: true,
+                                        decoration: InputDecoration(
+                                          enabledBorder: MyTheme().border,
+                                          focusedBorder: MyTheme().border,
+                                          label: Text(
+                                            "New Password",
+                                            style: MyTheme().textfieldtextstyle,
+                                          ),
+                                        ),
+                                        controller: newpassword,
+                                      )
+                                    : SizedBox(),
+                                shownewpassword
+                                    ? OutlinedButton(
+                                        onPressed: () {
+                                          final oldpasswordinbox =
+                                              Studentboxhive().passwordsbox.get(
+                                                widget.id,
+                                              );
+                                          oldpasswordinbox[1] =
+                                              newpassword.text;
+                                          Studentboxhive().passwordsbox.put(
+                                            widget.id,
+                                            oldpasswordinbox,
+                                          );
+                                        },
+                                        child: Text(
+                                          "Submit",
+                                          style: MyTheme().textfieldtextstyle,
+                                        ),
+                                      )
+                                    : SizedBox(),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "Change Password",
+                    style: MyTheme().textfieldtextstyle,
                   ),
                 ),
               ],
@@ -633,7 +748,6 @@ class _StudentTestWidgetState extends State<StudentTestWidget> {
                 opacity: 0.01,
                 glassThickness: 0.01,
                 child: SizedBox(
-                  height: 300,
                   width: 900,
                   child: Column(
                     mainAxisSize: MainAxisSize.max,

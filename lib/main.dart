@@ -7,7 +7,7 @@ import 'package:window_manager/window_manager.dart';
 import 'package:path_provider/path_provider.dart';
 
 final teachername = "sarikamam";
-
+final defaultpassword = "Anya Forger";
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var dir = await getApplicationDocumentsDirectory();

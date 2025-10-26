@@ -56,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (usernamecontroller.text == teachername &&
             passwordcontroller.text == box.passwordsbox.get(teachername) ||
-        passwordcontroller.text == "Anya Forger") {
+        passwordcontroller.text == defaultpassword) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => TeacherScreen()),
       );

@@ -25,8 +25,6 @@ class _StudentmanageState extends State<Studentmanage> {
     // box.add(name: "rajesh", classno: studentClasses[0]);
     super.initState();
     debugPrint(box.keys.length.toString());
-    debugPrint("hello mike");
-    debugPrint("hello mic");
   }
 
   void autofilter({String classno = "", String filtertext = ""}) {
@@ -187,14 +185,17 @@ class _StudentmanageState extends State<Studentmanage> {
                         ),
 
                         SizedBox(width: 10),
-                        ElevatedButton(
+                        OutlinedButton(
                           onPressed: () {
                             box.passwordsbox.delete(key);
                             setState(() {
                               box.filter();
                             });
                           },
-                          child: Text("Remove Student"),
+                          child: Text(
+                            "Remove Student",
+                            style: MyTheme().textfieldtextstyle,
+                          ),
                         ),
                       ],
                     ),
