@@ -11,4 +11,24 @@ class MyTheme {
     color: const Color.fromARGB(255, 162, 162, 162),
     fontSize: 10,
   );
+
+  AppBar appBar(String title) {
+    return AppBar(
+      iconTheme: IconThemeData(color: Colors.white),
+      toolbarHeight: 70,
+      backgroundColor: Colors.transparent,
+      centerTitle: true,
+      title: Padding(
+        padding: const EdgeInsets.all(40.0),
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: MyTheme().textfieldtextstyle.copyWith(
+            fontSize: 30,
+            fontFamily: "Pacifico",
+          ),
+        ),
+      ),
+    );
+  }
 }

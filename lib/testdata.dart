@@ -1,5 +1,7 @@
 import 'package:hive/hive.dart';
-part 'testdatahive.g.dart';
+part 'testdata.g.dart';
+
+const testtype = ["Quize", "Test"];
 
 @HiveType(typeId: 0)
 class Testdatahive extends HiveObject {
@@ -13,11 +15,14 @@ class Testdatahive extends HiveObject {
   List<QuestionsData> questions;
   @HiveField(4)
   List<StudentTestData> studentdata = [];
+  @HiveField(5)
+  String? testtype;
   Testdatahive({
     required this.testname,
     required this.testtime,
     required this.classno,
     required this.questions,
+    required this.testtype,
   });
 }
 
@@ -29,11 +34,14 @@ class QuestionsData extends HiveObject {
   List<String> answers;
   @HiveField(2)
   List<int> correctanswerindex;
+  @HiveField(3)
+  String questiontype;
 
   QuestionsData({
     required this.question,
     required this.answers,
     required this.correctanswerindex,
+    required this.questiontype,
   });
 }
 
@@ -57,4 +65,25 @@ class StudentTestData extends HiveObject {
     required this.obtainedmarks,
     required this.questiondata,
   });
+}
+
+class Testdatamanage {
+  final testbox = Hive.box<Testdatahive>("test");
+  bool checktestpreexist(String id) {
+    if (testbox.keys.contains(id.toLowerCase())) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void updatetest(String oldkey, String newkey, Testdatahive data) {
+    data.studentdata.addAll(testbox.get(oldkey)!.studentdata);
+    testbox.put(newkey, data);
+    testbox.delete(oldkey);
+  }
+
+  void addtest(Testdatahive data) {
+    testbox.put("${data.testname.toLowerCase()}_${data.classno}", data);
+  }
 }

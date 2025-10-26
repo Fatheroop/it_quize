@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:it_quize/main.dart';
-import 'package:it_quize/passwordboxhive.dart';
+import 'package:it_quize/studentboxhive.dart';
 import 'login_page.dart';
 import 'theme.dart';
 
@@ -13,7 +13,7 @@ class Studentmanage extends StatefulWidget {
 
 class _StudentmanageState extends State<Studentmanage> {
   final filtercontroller = TextEditingController();
-  final box = Passwordboxhive();
+  final box = Studentboxhive();
   var filterclass = studentClasses[0];
 
   @override
@@ -31,12 +31,12 @@ class _StudentmanageState extends State<Studentmanage> {
 
   void autofilter({String classno = "", String filtertext = ""}) {
     setState(() {
-      if (classno.isNotEmpty && filtertext.isEmpty) {
+      if (classno.isNotEmpty && filtertext == "") {
         filterclass = classno;
-        box.filtervalue = "${filtercontroller.text}_$classno";
+        box.filtervalue = classno;
         debugPrint(box.filtervalue);
-      } else {
-        box.filtervalue = filtercontroller.text.toLowerCase();
+      } else if (classno.isEmpty && filtertext.isNotEmpty) {
+        box.filtervalue = filtertext;
         debugPrint(box.filtervalue);
       }
       box.filter();
@@ -49,22 +49,7 @@ class _StudentmanageState extends State<Studentmanage> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        title: Padding(
-          padding: const EdgeInsets.all(40.0),
-          child: Text(
-            "Student Manage",
-            textAlign: TextAlign.center,
-            style: MyTheme().textfieldtextstyle.copyWith(
-              fontSize: 30,
-              fontFamily: "Pacifico",
-            ),
-          ),
-        ),
-      ),
+      appBar: MyTheme().appBar("Student Manage"),
       body: Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -100,6 +85,7 @@ class _StudentmanageState extends State<Studentmanage> {
                     style: MyTheme().textfieldtextstyle,
                   ),
                 ),
+
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
@@ -134,13 +120,17 @@ class _StudentmanageState extends State<Studentmanage> {
                   ),
                 ),
                 ClassChoiceChip(
-                  selectedclass: "",
+                  selectedclass: filterclass,
                   callbackfunction: (String selected) {
-                    autofilter(classno: selected);
+                    setState(() {
+                      filterclass = selected;
+                      autofilter(classno: selected);
+                    });
                   },
                 ),
               ],
             ),
+
             SizedBox(height: 30),
             Expanded(
               child: ListView.builder(
@@ -148,6 +138,9 @@ class _StudentmanageState extends State<Studentmanage> {
                 itemBuilder: (context, index) {
                   final namecontroller = TextEditingController();
                   var key = box.keys[index];
+                  if (key == teachername) {
+                    return SizedBox();
+                  }
                   namecontroller.value = TextEditingValue(
                     text: box.passwordsbox.get(key)[0],
                   );
@@ -171,7 +164,9 @@ class _StudentmanageState extends State<Studentmanage> {
                             ),
                             controller: namecontroller,
                             onSubmitted: (value) {
-                              box.updatedata(key, value, selectedclass);
+                              setState(() {
+                                box.updatedata(key, value, selectedclass);
+                              });
                             },
                             style: MyTheme().textfieldtextstyle,
                           ),
@@ -180,34 +175,17 @@ class _StudentmanageState extends State<Studentmanage> {
                         ClassChoiceChip(
                           selectedclass: selectedclass,
                           callbackfunction: (String selected) {
-                            box.updatedata(
-                              key,
-                              namecontroller.text,
-                              selectedclass,
-                            );
-                          },
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
                             setState(() {
-                              if (!box.passwordsbox.containsKey(
-                                "${namecontroller.text.toLowerCase()}_$selectedclass",
-                              )) {
-                                box.updatedata(
-                                  key,
-                                  namecontroller.text,
-                                  selectedclass,
-                                );
-                              }
+                              box.updatedata(
+                                key,
+                                namecontroller.text,
+                                selected,
+                              );
+                              box.filter();
                             });
                           },
-                          style: ButtonStyle(
-                            backgroundColor: WidgetStatePropertyAll(
-                              Colors.black87,
-                            ),
-                          ),
-                          child: Text("Update"),
                         ),
+
                         SizedBox(width: 10),
                         ElevatedButton(
                           onPressed: () {

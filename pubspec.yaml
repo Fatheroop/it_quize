@@ -8,12 +8,14 @@ environment:
 
 dependencies:
   build_runner: ^2.4.13
+  flutter_glass_morphism: ^1.0.0
   flutter:
     sdk: flutter
-  hive:
+  hive: ^2.2.3
   isar_flutter_libs: ^4.0.0-dev.13
   path_provider: ^2.1.5
   window_manager: ^0.5.0
+  animated_text_kit: any
 
 dev_dependencies:
   flutter_test:

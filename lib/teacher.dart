@@ -1,12 +1,16 @@
 // ignore: file_names
+
 import 'package:flutter/material.dart';
-import 'package:it_quize/passwordboxhive.dart';
+import 'package:it_quize/login_page.dart';
+import 'package:it_quize/studentboxhive.dart';
 import 'package:it_quize/studentmanage.dart';
+import 'package:it_quize/testdata.dart';
+import 'package:it_quize/testhome.dart';
+import 'package:it_quize/testresultshow.dart';
 import 'package:it_quize/theme.dart';
 
 class TeacherScreen extends StatefulWidget {
-  final String teachername;
-  const TeacherScreen({super.key, required this.teachername});
+  const TeacherScreen({super.key});
 
   @override
   State<TeacherScreen> createState() => _TeacherScreenState();
@@ -15,55 +19,43 @@ class TeacherScreen extends StatefulWidget {
 class _TeacherScreenState extends State<TeacherScreen> {
   var passworddailogboxshow = false;
 
+  final testnamecontroller = TextEditingController();
+  String filtervalue = "";
+  Testdatamanage datacontroller = Testdatamanage();
+
   final List<IconData> optionsicons = [
     Icons.person_2_outlined,
     Icons.pages_outlined,
-    Icons.newspaper_outlined,
     Icons.key_off_rounded,
-    Icons.pending,
-    Icons.pages,
   ];
   final List<String> optiionstext = [
     "Student Manage",
     "Test Manage",
-    "Create New Test",
     "Change Password",
-    "Pending Tests",
-    "Completed Test",
   ];
-
-  final List<Widget> screens = [Studentmanage()];
 
   @override
   Widget build(BuildContext context) {
+    List<String> filterdkeys = [];
+    for (String keys in datacontroller.testbox.keys) {
+      if (keys.contains(filtervalue)) {
+        filterdkeys.add(keys);
+      }
+    }
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        title: Padding(
-          padding: const EdgeInsets.all(40.0),
-          child: Text(
-            "Teacher Page",
-            textAlign: TextAlign.center,
-            style: MyTheme().textfieldtextstyle.copyWith(
-              fontSize: 30,
-              fontFamily: "Pacifico",
-            ),
-          ),
-        ),
-      ),
+      appBar: MyTheme().appBar("Test Management"),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/teacher_background.jpg"),
             fit: BoxFit.cover,
+            image: AssetImage("assets/images/testmanage_background.jpg"),
           ),
         ),
         child: Column(
           children: [
+            SizedBox(height: 70),
             if (passworddailogboxshow)
               SizedBox(
                 height: 200,
@@ -79,54 +71,196 @@ class _TeacherScreenState extends State<TeacherScreen> {
               )
             else
               SizedBox(),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  mainAxisExtent: 200,
-                  crossAxisSpacing: 10,
-                  crossAxisCount: 3,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                OutlinedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => Studentmanage(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      "Student Manage",
+                      style: MyTheme().textfieldtextstyle,
+                    ),
+                  ),
                 ),
-                itemCount: optionsicons.length,
+                OutlinedButton(
+                  onPressed: () {
+                    setState(() {
+                      passworddailogboxshow = !passworddailogboxshow;
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      "Change Password",
+                      style: MyTheme().textfieldtextstyle,
+                    ),
+                  ),
+                ),
+                OutlinedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            NewTestScreen(editmode: 'n'),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      "New Test",
+                      style: MyTheme().textfieldtextstyle,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 250,
+                  child: TextField(
+                    style: MyTheme().textfieldtextstyle,
+                    onChanged: (value) {
+                      setState(() {
+                        filtervalue = value;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      border: MyTheme().border,
+                      label: Text(
+                        "Enter text Name to filter",
+                        style: MyTheme().textfieldtextstyle,
+                      ),
+                    ),
+                  ),
+                ),
+                OutlinedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => LoginPage(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      "Log Out",
+                      style: MyTheme().textfieldtextstyle.copyWith(
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              padding: EdgeInsets.all(20),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: filterdkeys.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 30,
-                      horizontal: 20,
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          if (optiionstext[index] == "Change Password") {
-                            passworddailogboxshow = !passworddailogboxshow;
-                          } else {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return screens[0];
-                                },
-                              ),
-                            );
-                          }
-                        });
-                      },
-                      child: Card.outlined(
-                        color: const Color.fromARGB(56, 0, 0, 0),
-                        elevation: 3,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            filterdkeys[index],
+                            style: MyTheme().textfieldtextstyle,
+                          ),
+                        ),
+                        Row(
                           children: [
-                            SizedBox(height: 20),
-                            Icon(optionsicons[index], color: Colors.white),
-                            SizedBox(height: 10),
-                            Text(
-                              optiionstext[index],
-                              style: TextStyle(
-                                color: MyTheme().textfieldtextcolor,
-                              ),
+                            IconButton(
+                              onPressed: () {
+                                showDialog(
+                                  fullscreenDialog: true,
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    backgroundColor: Colors.black,
+                                    title: Text(
+                                      "Warning!",
+                                      style: TextStyle(
+                                        color: const Color.fromARGB(
+                                          213,
+                                          255,
+                                          48,
+                                          48,
+                                        ),
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    content: Text(
+                                      "Are you sure to delete this Test?\nPress yes to delete else click out of box.",
+                                      style: TextStyle(
+                                        color: Colors.white38,
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                    actions: [
+                                      OutlinedButton(
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              WidgetStatePropertyAll(
+                                                Colors.black12,
+                                              ),
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            datacontroller.testbox.delete(
+                                              filterdkeys[index],
+                                            );
+                                            Navigator.pop(context);
+                                          });
+                                        },
+                                        child: Text(
+                                          "Yes",
+                                          style: MyTheme().textfieldtextstyle,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              color: const Color.fromARGB(255, 184, 184, 184),
+                              icon: Icon(Icons.delete),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        NewTestScreen(
+                                          editmode: 'e',
+                                          testkey: filterdkeys[index],
+                                        ),
+                                  ),
+                                );
+                              },
+                              color: const Color.fromARGB(255, 172, 172, 172),
+                              icon: Icon(Icons.edit_document),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        ResultHome(testid: filterdkeys[index]),
+                                  ),
+                                );
+                              },
+                              color: const Color.fromARGB(255, 172, 172, 172),
+                              icon: Icon(Icons.person_2_sharp),
                             ),
                           ],
                         ),
-                      ),
+                      ],
                     ),
                   );
                 },
@@ -148,7 +282,7 @@ class Changepassword extends StatefulWidget {
 }
 
 class _ChangepasswordState extends State<Changepassword> {
-  final box = Passwordboxhive();
+  final box = Studentboxhive();
   final oldpasswordcontroller = TextEditingController();
   final newpasswordcontroller = TextEditingController();
   var unlocknewpassword = false;

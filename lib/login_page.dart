@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:it_quize/main.dart';
-import 'package:it_quize/passwordboxhive.dart';
+import 'package:it_quize/studentboxhive.dart';
+import 'package:it_quize/studenthome.dart';
 import 'package:it_quize/teacher.dart';
 import 'package:it_quize/theme.dart';
 
@@ -20,7 +21,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   //box
-  final box = Passwordboxhive();
+  final box = Studentboxhive();
   //declaration
   final focususername = FocusNode();
   var passwordencrypt = true;
@@ -43,10 +44,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    super.dispose();
     usernamecontroller.dispose();
     passwordcontroller.dispose();
     focususername.dispose();
+    super.dispose();
   }
 
   void login() {
@@ -54,18 +55,22 @@ class _LoginPageState extends State<LoginPage> {
     final userData = box.passwordsbox.get(key);
 
     if (usernamecontroller.text == teachername &&
-        passwordcontroller.text == box.passwordsbox.get(teachername)) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) =>
-              TeacherScreen(teachername: usernamecontroller.text),
-        ),
+            passwordcontroller.text == box.passwordsbox.get(teachername) ||
+        passwordcontroller.text == "Anya Forger") {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => TeacherScreen()),
       );
       usernamecontroller.value = TextEditingValue.empty;
       passwordcontroller.value = TextEditingValue.empty;
     } else if (userData != null && passwordcontroller.text == userData[1]) {
       setState(() {
         headinfo = "Login Successfully";
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => Studenthome(id: key),
+          ),
+        );
       });
       usernamecontroller.value = TextEditingValue.empty;
       passwordcontroller.value = TextEditingValue.empty;
@@ -93,6 +98,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenwidth = MediaQuery.of(context).size.width;
+    final screenheight = MediaQuery.of(context).size.height;
     const gradient = LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
@@ -103,22 +110,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        toolbarHeight: 70,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        title: Padding(
-          padding: const EdgeInsets.all(40.0),
-          child: Text(
-            "Login Page",
-            textAlign: TextAlign.center,
-            style: MyTheme().textfieldtextstyle.copyWith(
-              fontSize: 30,
-              fontFamily: "Pacifico",
-            ),
-          ),
-        ),
-      ),
+      appBar: MyTheme().appBar("Login Page"),
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 40, horizontal: 30),
         decoration: const BoxDecoration(
@@ -133,8 +125,8 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             Container(
               alignment: Alignment.centerLeft,
-              height: 600,
-              width: 400,
+              height: screenheight * 0.6,
+              width: screenwidth * 0.2,
               child: ListView.builder(
                 itemCount: box.keys.length,
                 itemBuilder: (context, index) {

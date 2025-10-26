@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'testdatahive.dart';
+part of 'testdata.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
@@ -21,13 +21,14 @@ class TestdatahiveAdapter extends TypeAdapter<Testdatahive> {
       testtime: fields[1] as int,
       classno: fields[2] as String,
       questions: (fields[3] as List).cast<QuestionsData>(),
+      testtype: fields[5] as String?,
     )..studentdata = (fields[4] as List).cast<StudentTestData>();
   }
 
   @override
   void write(BinaryWriter writer, Testdatahive obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.testname)
       ..writeByte(1)
@@ -37,7 +38,9 @@ class TestdatahiveAdapter extends TypeAdapter<Testdatahive> {
       ..writeByte(3)
       ..write(obj.questions)
       ..writeByte(4)
-      ..write(obj.studentdata);
+      ..write(obj.studentdata)
+      ..writeByte(5)
+      ..write(obj.testtype);
   }
 
   @override
@@ -65,19 +68,22 @@ class QuestionsDataAdapter extends TypeAdapter<QuestionsData> {
       question: fields[0] as String,
       answers: (fields[1] as List).cast<String>(),
       correctanswerindex: (fields[2] as List).cast<int>(),
+      questiontype: fields[3] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, QuestionsData obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.question)
       ..writeByte(1)
       ..write(obj.answers)
       ..writeByte(2)
-      ..write(obj.correctanswerindex);
+      ..write(obj.correctanswerindex)
+      ..writeByte(3)
+      ..write(obj.questiontype);
   }
 
   @override
