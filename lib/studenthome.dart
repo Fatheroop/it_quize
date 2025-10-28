@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_glass_morphism/flutter_glass_morphism.dart';
+import 'package:it_quize/leader_board.dart';
 import 'package:it_quize/login_page.dart';
 import 'package:it_quize/studentboxhive.dart';
 import 'package:it_quize/testdata.dart';
@@ -176,6 +177,23 @@ class _StudenthomeState extends State<Studenthome> {
                   child: Text(
                     "Log Out",
                     style: TextStyle(color: Colors.red, fontSize: 15),
+                  ),
+                ),
+                OutlinedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext contex) => LeaderBoard(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "LeaderBoard",
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 255, 2, 2),
+                      fontSize: 15,
+                    ),
                   ),
                 ),
                 OutlinedButton(

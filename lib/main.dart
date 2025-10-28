@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:it_quize/login_page.dart';
@@ -10,6 +11,8 @@ final teachername = "sarikamam";
 final defaultpassword = "Anya Forger";
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final audioplayer = AudioPlayer();
+  audioplayer.play(AssetSource("assets/audio/peaceful_solitude.mp3"));
   var dir = await getApplicationDocumentsDirectory();
   debugPrint("Path is : ${dir.path}");
   Hive.init(dir.path);
