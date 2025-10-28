@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_glass_morphism/flutter_glass_morphism.dart';
 import 'package:it_quize/login_page.dart';
@@ -378,6 +379,7 @@ class _StudentTestWidgetState extends State<StudentTestWidget> {
   int exp = 0;
   int time = 0;
   Timer? _timer;
+  final audioplayer = AudioPlayer();
 
   @override
   void initState() {
@@ -412,6 +414,11 @@ class _StudentTestWidgetState extends State<StudentTestWidget> {
   }
 
   void _appreciatation(bool greet) {
+    if (greet) {
+      audioplayer.play(AssetSource("audio/good.mp3"));
+    } else {
+      audioplayer.play(AssetSource("audio/bad.mp3"));
+    }
     greet ? exp++ : exp--;
     if (!greet && exp >= 1) {
       exp = 0;
