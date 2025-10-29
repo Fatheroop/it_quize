@@ -9,10 +9,10 @@ import 'package:path_provider/path_provider.dart';
 
 final teachername = "sarikamam";
 final defaultpassword = "Anya Forger";
+final audioplayer = AudioPlayer();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final audioplayer = AudioPlayer();
-  audioplayer.play(AssetSource("assets/audio/peaceful_solitude.mp3"));
   var dir = await getApplicationDocumentsDirectory();
   debugPrint("Path is : ${dir.path}");
   Hive.init(dir.path);
@@ -25,6 +25,16 @@ void main() async {
   await Hive.openBox("students");
   await Hive.openBox<Testdatahive>("test");
   runApp(const MainApp());
+
+  audioplayer.onPlayerStateChanged.listen((PlayerState s) {
+    debugPrint('Current player state: $s');
+  });
+  try {
+    await audioplayer.play(AssetSource("audio/peaceful_solitude.mp3"));
+    await audioplayer.setReleaseMode(ReleaseMode.loop);
+  } catch (e) {
+    debugPrint('Error playing audio: $e');
+  }
 }
 
 class MainApp extends StatelessWidget {

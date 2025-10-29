@@ -1,6 +1,7 @@
 // ignore: file_names
 
 import 'package:flutter/material.dart';
+import 'package:it_quize/leader_board.dart';
 import 'package:it_quize/login_page.dart';
 import 'package:it_quize/studentboxhive.dart';
 import 'package:it_quize/studentmanage.dart';
@@ -117,6 +118,22 @@ class _TeacherScreenState extends State<TeacherScreen> {
                     padding: EdgeInsets.all(8),
                     child: Text(
                       "New Test",
+                      style: MyTheme().textfieldtextstyle,
+                    ),
+                  ),
+                ),
+                OutlinedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => LeaderBoard(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      "LeaderBoard",
                       style: MyTheme().textfieldtextstyle,
                     ),
                   ),
