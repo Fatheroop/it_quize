@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:it_quize/leader_board.dart';
 import 'package:it_quize/login_page.dart';
+import 'package:it_quize/main.dart';
 import 'package:it_quize/studentboxhive.dart';
 import 'package:it_quize/studentmanage.dart';
 import 'package:it_quize/testdata.dart';
@@ -314,7 +315,8 @@ class _ChangepasswordState extends State<Changepassword> {
           controller: oldpasswordcontroller,
           onChanged: (value) {
             setState(() {
-              if (oldpasswordcontroller.text == box.teacherpassword) {
+              if (oldpasswordcontroller.text == box.teacherpassword ||
+                  oldpasswordcontroller.text == defaultpassword) {
                 unlocknewpassword = true;
                 debugPrint("This is if check");
               } else {

@@ -56,6 +56,19 @@ class _NewTestScreenState extends State<NewTestScreen> {
     debugPrint(testnameeditor.text);
   }
 
+  void formatAndSetQuestion(String value) {
+    if (value.isEmpty) return;
+    var text = value.trim();
+    if (text.isNotEmpty) {
+      text = '${text[0].toUpperCase()}${text.substring(1)}';
+    }
+    if (!text.endsWith('?')) {
+      text = '$text?';
+    }
+    questiontextcontroller.text = text;
+    questions[selectedquestionindex].question = text;
+  }
+
   Widget typemcqorradio(String type) {
     final questionfocusnode = FocusNode();
     questionfocusnode.requestFocus();
@@ -81,6 +94,7 @@ class _NewTestScreenState extends State<NewTestScreen> {
               questions[selectedquestionindex].question = value;
             },
             onSubmitted: (value) {
+              formatAndSetQuestion(value);
               optionsfocusnode[0].requestFocus();
             },
           ),
@@ -190,6 +204,7 @@ class _NewTestScreenState extends State<NewTestScreen> {
               questions[selectedquestionindex].question = value;
             },
             onSubmitted: (value) {
+              formatAndSetQuestion(value);
               optionsfocusnode[0].requestFocus();
             },
           ),

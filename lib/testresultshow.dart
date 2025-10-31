@@ -213,7 +213,7 @@ class Resultpreview extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "Time Taken: ${studentdata.timetaken}",
+                  "Time Taken: ${studentdata.timetaken} Sec",
                   style: MyTheme().textfieldtextstyle.copyWith(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,

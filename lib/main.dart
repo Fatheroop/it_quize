@@ -13,7 +13,7 @@ final audioplayer = AudioPlayer();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  var dir = await getApplicationDocumentsDirectory();
+  var dir = await getApplicationSupportDirectory();
   debugPrint("Path is : ${dir.path}");
   Hive.init(dir.path);
   Hive.registerAdapter(TestdatahiveAdapter());

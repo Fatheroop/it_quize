@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MyTheme {
   final backgroundcolor = Colors.black12;
@@ -14,6 +17,22 @@ class MyTheme {
 
   AppBar appBar(String title) {
     return AppBar(
+      actions: [
+        OutlinedButton(
+          onPressed: () {
+            SystemNavigator.pop();
+            exit(0);
+          },
+          child: Text(
+            "Close Application",
+            style: TextStyle(
+              color: Colors.redAccent,
+              fontSize: 10,
+              fontFamily: "Pacifico",
+            ),
+          ),
+        ),
+      ],
       iconTheme: IconThemeData(color: Colors.white),
       toolbarHeight: 70,
       backgroundColor: Colors.transparent,

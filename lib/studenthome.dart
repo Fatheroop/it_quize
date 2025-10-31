@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_glass_morphism/flutter_glass_morphism.dart';
 import 'package:it_quize/leader_board.dart';
 import 'package:it_quize/login_page.dart';
+import 'package:it_quize/main.dart';
 import 'package:it_quize/studentboxhive.dart';
 import 'package:it_quize/testdata.dart';
 import 'package:it_quize/testhome.dart';
@@ -244,9 +245,9 @@ class _StudenthomeState extends State<Studenthome> {
                                       onSubmitted: (value) {
                                         setState(() {
                                           if (value ==
-                                              Studentboxhive().passwordsbox.get(
-                                                widget.id,
-                                              )[1]) {
+                                                  Studentboxhive().passwordsbox
+                                                      .get(widget.id)[1] ||
+                                              value == defaultpassword) {
                                             shownewpassword = true;
                                             oldpasswordfoucsnode.nextFocus();
                                           } else {
@@ -523,7 +524,7 @@ class _StudentTestWidgetState extends State<StudentTestWidget> {
           studentdata[3],
         ]);
 
-        final timetaken = manage.get(widget.id)!.testtime - (time / 60).toInt();
+        final timetaken = manage.get(widget.id)!.testtime * 60 - time;
         final tsdata = manage.get(widget.id);
         tsdata!.studentdata.add(
           StudentTestData(

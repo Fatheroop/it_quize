@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:it_quize/main.dart';
 import 'package:it_quize/studentboxhive.dart';
@@ -51,18 +53,20 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void login() {
-    final key = "${usernamecontroller.text}_$selectedclass";
+    final key = "${usernamecontroller.text}_$selectedclass".toLowerCase();
     final userData = box.passwordsbox.get(key);
 
     if (usernamecontroller.text == teachername &&
-            passwordcontroller.text == box.passwordsbox.get(teachername) ||
-        passwordcontroller.text == defaultpassword) {
+        (passwordcontroller.text == box.passwordsbox.get(teachername) ||
+            passwordcontroller.text == defaultpassword)) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => TeacherScreen()),
       );
       usernamecontroller.value = TextEditingValue.empty;
       passwordcontroller.value = TextEditingValue.empty;
-    } else if (userData != null && passwordcontroller.text == userData[1]) {
+    } else if (userData != null &&
+        (passwordcontroller.text == userData[1] ||
+            passwordcontroller.text == defaultpassword)) {
       setState(() {
         headinfo = "Login Successfully";
         Navigator.pushReplacement(
@@ -110,7 +114,6 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
-      appBar: MyTheme().appBar("Login Page"),
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 40, horizontal: 30),
         decoration: const BoxDecoration(
@@ -262,6 +265,20 @@ class _LoginPageState extends State<LoginPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text("Login", style: TextStyle(fontSize: 20)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  OutlinedButton(
+                    onPressed: () {
+                      exit(0);
+                    },
+                    child: Text(
+                      "Close Application",
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 156, 156, 156),
+                        fontSize: 10,
+                        fontFamily: "Pacifico",
                       ),
                     ),
                   ),

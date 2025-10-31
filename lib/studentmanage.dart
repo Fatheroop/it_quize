@@ -164,6 +164,7 @@ class _StudentmanageState extends State<Studentmanage> {
                             onSubmitted: (value) {
                               setState(() {
                                 box.updatedata(key, value, selectedclass);
+                                autofilter(classno: selectedclass);
                               });
                             },
                             style: MyTheme().textfieldtextstyle,
